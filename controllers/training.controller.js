@@ -61,7 +61,7 @@ class TrainingController {
                 res.json(training);
             }
 
-            if (userId && date) {
+            else if(userId && date) {
                 const trainings = await Training.findAll({
                     where: {
                         userId,
@@ -75,7 +75,20 @@ class TrainingController {
                 }
             }
 
-            if (year && month && userId) {
+            else if (userId){
+                const trainings = await Training.findAll({
+                    where:{
+                        userId
+                    }
+                });
+                res.json(trainings);
+
+                if (!trainings) {
+                    return res.status(404).json(0);
+                }
+            }
+
+            else if (year && month && userId) {
                 const startDay = new Date(year, month - 1, 1);
                 const endDay = new Date(year, month, 0);
 

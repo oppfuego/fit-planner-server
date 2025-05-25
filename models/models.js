@@ -7,6 +7,10 @@ const User = sequelize.define('user', {
     firstName: {type: DataTypes.STRING},
     secondName: {type: DataTypes.STRING},
     password: {type: DataTypes.STRING, allowNull: false},
+    telegram: {type: DataTypes.STRING},
+    phone: {type: DataTypes.STRING},
+    dateOfBirth: {type: DataTypes.DATEONLY},
+    gender: {type: DataTypes.STRING},
     role: {type: DataTypes.STRING, defaultValue: 'USER'},
     avatarUrl: {type: DataTypes.STRING},
 });
@@ -91,7 +95,7 @@ const ExerciseExecution = sequelize.define('exercise_execution', {
 });
 
 
-MuscleGroup.hasMany(Exercise, {foreignKey: 'muscleGroupId'});
+MuscleGroup.hasMany(Exercise, {foreignKey: 'muscleGroupId', onDelete: 'CASCADE'});
 Exercise.belongsTo(MuscleGroup, {foreignKey: 'muscleGroupId'});
 
 User.hasMany(Training, {foreignKey: 'userId', onDelete: 'CASCADE'});
@@ -100,8 +104,9 @@ Training.belongsTo(User, {foreignKey: 'userId', onDelete: 'CASCADE'});
 Training.belongsToMany(Exercise, {through: TrainingExercises, foreignKey: 'trainingId'});
 Exercise.belongsToMany(Training, {through: TrainingExercises, foreignKey: 'exerciseId'});
 
-ExerciseExecution.belongsTo(Exercise, {foreignKey: 'exerciseId'});
-ExerciseExecution.belongsTo(User, {foreignKey: 'userId'});
+ExerciseExecution.belongsTo(Exercise, {foreignKey: 'exerciseId', onDelete: 'CASCADE'});
+ExerciseExecution.belongsTo(User, {foreignKey: 'userId', onDelete: 'CASCADE'});
+User.hasMany(ExerciseExecution, {foreignKey: 'userId', onDelete: 'CASCADE'});
 
 module.exports = {
     MuscleGroup,

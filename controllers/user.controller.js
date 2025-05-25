@@ -3,6 +3,27 @@ const fs = require('fs');
 const path = require('path');
 
 class UserController {
+
+    async getAll(req, res) {
+        console.log('getAll request received', req.body);
+        try {
+            const users = await User.findAll({
+                attributes: {exclude: ['password']}
+            });
+
+            if (!users) {
+                console.log('No users found');
+                return res.status(404).json({error: 'No users found'});
+            }
+
+            console.log('Users found:', users);
+            res.json({users});
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).send('Server error');
+        }
+    }
+
     async getUser(req, res) {
         console.log('getUser request received', req.body);
         try {
@@ -28,11 +49,11 @@ class UserController {
 
     async updateAvatar(req, res) {
         try {
-            const { email } = req.body;
-            const user = await User.findOne({ where: { email } });
+            const {email} = req.body;
+            const user = await User.findOne({where: {email}});
 
             if (!user) {
-                return res.status(404).json({ error: 'User not found' });
+                return res.status(404).json({error: 'User not found'});
             }
 
             const oldAvatarPath = user.avatarUrl ? path.join(__dirname, '..', 'uploads', path.basename(user.avatarUrl)) : null;
@@ -51,11 +72,18 @@ class UserController {
                 });
             }
 
-            res.status(200).json({ avatarUrl: user.avatarUrl });
+            res.status(200).json({avatarUrl: user.avatarUrl});
         } catch (error) {
             console.error('Error:', error);
             res.status(500).send('Server error');
         }
+    }
+
+    async delete(req, res) {
+        const {id} = req.query;
+        const user = await User.findByPk(id);
+        await   user.destroy();
+        return res.json({message: 'User deleted'});
     }
 }
 

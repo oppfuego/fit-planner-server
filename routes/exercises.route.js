@@ -2,7 +2,7 @@ const Router = require('express');
 const router = new Router();
 const exercisesController = require('../controllers/exercises.controller');
 
-router.post('/add', exercisesController.create);
+router.post('/create', exercisesController.create);
 router.get('/get-all', exercisesController.getAll);
 router.get('/get-by-id', exercisesController.getById);
 router.put('/update', exercisesController.update);

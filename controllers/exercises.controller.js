@@ -2,8 +2,8 @@ const { Exercise } = require('../models/models');
 
 class ExercisesController {
     async create(req, res) {
-        const { name, muscleGroupId, description } = req.body;
-        const exercise = await Exercise.create({ name, muscleGroupId, description });
+        const { name, muscleGroupId, description, equipmentType } = req.body;
+        const exercise = await Exercise.create({ name, muscleGroupId, description, equipmentType });
         return res.json(exercise);
     }
 
